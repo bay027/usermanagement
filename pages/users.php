@@ -4,6 +4,7 @@ require_once "config/database.php";
 require_once "config/sweetalert.php";
 
 $memtype = $controller->getData('Type');
+$member_list = $controller->getData('Member');
 
 if(isset($_POST['submit']) && $_POST['submit'] == 'add'){
     $memberId = $_POST['member_id'];
@@ -84,20 +85,29 @@ if(isset($_POST['submit']) && $_POST['submit'] == 'add'){
                         </tr>
                     </thead>
                     <tbody>
+                        <?php 
+                        $i = 1;
+                        while($row = $member_list->fetch(PDO::FETCH_ASSOC)){ ?>
                         <tr class="text-center">
-                            <td class="align-middle">1</td>
+                            <td class="align-middle"><?php echo $i; ?></td>
                             <td class="align-middle">
-                                <img src="#" class="img-circle elevation-2"
-                                    alt="User Image">
+                                <img src="uploads/img/<?php echo $row['member_photo']; ?>" class="img-circle elevation-2"
+                                    alt="User Image" style="width: 40px; height: 40px;">
                             </td>
-                            <td class="align-middle">MEM-0001</td>
-                            <td class="text-left align-middle">นายสมชาย มั่งมี</td>
-                            <td class="align-middle">somchai@example.com</td>
-                            <td class="align-middle">081-234-5678</td>
+                            <td class="align-middle"><?php echo $row['member_id']; ?></td>
+                            <td class="text-left align-middle">
+                                <?php echo $row['prefix'].$row['member_fname']." "
+                                    .$row['member_fname']; ?></td>
+                            <td class="align-middle"><?php echo $row['member_email']; ?></td>
+                            <td class="align-middle"><?php echo $row['member_phone']; ?></td>
                             <td class="align-middle">
-                                <span class="badge badge-success">ใช้งาน</span>
+                                <span class="badge badge-success">
+                                    <?php echo ($row['member_status'] == 1) ? 'ใช้งาน' : 'ระงับ'; ?>
+                                </span>
                             </td>
-                            <td class="align-middle">20/12/2023</td>
+                            <td class="align-middle">
+                                <?php echo date('d/m/Y', strtotime($row['created_at'])); ?>
+                            </td>
                             <td class="align-middle">
                                 <a href="#" class="btn btn-warning btn-sm" title="แก้ไข">
                                     <i class="fas fa-edit"></i>
@@ -108,6 +118,7 @@ if(isset($_POST['submit']) && $_POST['submit'] == 'add'){
                                 </a>
                             </td>
                         </tr>
+                        <?php $i++; } ?>
                     </tbody>
                 </table>
             </div>
